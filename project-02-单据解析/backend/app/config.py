@@ -4,7 +4,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     app_name: str = "annto 多模态物流单据解析引擎"
+    app_env: str = "development"
     debug: bool = True
+    api_key: str = ""
     supported_doc_types: list[str] = ["waybill", "receipt", "warehouse_doc", "invoice", "id_document"]
     ocr_provider: str = "mock"
     llm_provider: str = "mock"

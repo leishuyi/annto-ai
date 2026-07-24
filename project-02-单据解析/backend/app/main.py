@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from loguru import logger
 from app.config import settings
 from app.core.response import ApiResponse, BizError
+from app.core.auth import AuthMiddleware
 from app.schemas.document import DocumentType, DOC_TYPE_LABELS
 from app.parser.pipeline import ParsePipeline
 
@@ -12,7 +13,8 @@ pipeline = ParsePipeline()
 os.makedirs(settings.upload_dir, exist_ok=True)
 
 app = FastAPI(title=settings.app_name, version="1.0.0")
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True,
+app.add_middleware(AuthMiddleware)
+app.add_middleware(CORSMiddleware, allow_origins=["*"],
                    allow_methods=["*"], allow_headers=["*"])
 
 ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png", "bmp", "tiff", "tif", "pdf"}
