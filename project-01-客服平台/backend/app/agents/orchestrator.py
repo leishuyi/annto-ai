@@ -5,7 +5,7 @@
 - EventBus 事件发布
 - loguru 结构化日志
 """
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Optional
 
 from loguru import logger
@@ -59,7 +59,7 @@ class AgentOrchestrator:
         for agent_key, agent_label in self.AGENT_CHAIN:
             agent = self.agents[agent_key]
             msg = A2AMessage(
-                message_id=f"msg_{case_id}_{agent_key}_{datetime.now(timezone.utc)().timestamp()}",
+                message_id=f"msg_{case_id}_{agent_key}_{datetime.now().timestamp()}",
                 source_agent=agent_key,
                 target_agent="",
                 case_id=case_id,

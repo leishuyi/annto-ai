@@ -1,4 +1,6 @@
 from functools import lru_cache
+from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -7,7 +9,7 @@ class Settings(BaseSettings):
     debug: bool = True
     app_env: str = "development"
     database_url: str = "sqlite:///./annto.db"
-    upload_dir: str = "data/uploads"
+    upload_dir: str = str(Path(__file__).parent.parent.parent / "data" / "uploads")
 
     # ---- Feature Flags ----
     feature_human_gate: bool = True
@@ -39,10 +41,19 @@ class Settings(BaseSettings):
     def is_production(self) -> bool:
         return self.app_env == "production"
 
+    def check_security(self):
+        """启动时校验安全配置"""
+        if self.is_production() and not self.api_key:
+            raise ValueError("生产环境必须设置 ANNTO_API_KEY")
+        if self.is_production() and self.debug:
+            raise ValueError("生产环境必须设置 debug=False")
+
 
 @lru_cache
 def get_settings() -> Settings:
-    return Settings()
+    s = Settings()
+    s.check_security()
+    return s
 
 
 settings = get_settings()

@@ -9,6 +9,7 @@ from loguru import logger
 from app.config import settings
 from app.core.log import setup_logging
 from app.core.auth import AuthMiddleware
+from app.core.tracing import RequestIDMiddleware
 from app.core.response import ApiResponse, BizError
 from app.database.session import engine, Base
 
@@ -34,6 +35,7 @@ app = FastAPI(title=settings.app_name, version="1.0.0", lifespan=lifespan,
               redoc_url=None if settings.app_env == "production" else "/redoc",
               openapi_url=None if settings.app_env == "production" else "/openapi.json")
 
+app.add_middleware(RequestIDMiddleware)
 app.add_middleware(AuthMiddleware)
 app.add_middleware(CORSMiddleware,
                    allow_origins=settings.cors_origins,
@@ -52,8 +54,9 @@ async def biz_error_handler(request: Request, exc: BizError):
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-    logger.opt(exception=exc).error("未捕获异常", url=str(request.url))
-    return JSONResponse(status_code=200, content=ApiResponse(code=50000, message="服务器内部错误").model_dump())
+    trace_id = getattr(request.state, "trace_id", "unknown")
+    logger.opt(exception=exc).error("未捕获异常", url=str(request.url), trace_id=trace_id)
+    return JSONResponse(status_code=200, content=ApiResponse(code=50000, message="服务器内部错误", data={"trace_id": trace_id}).model_dump())
 
 
 from app.routers import cases, agents, human_gate, documents
