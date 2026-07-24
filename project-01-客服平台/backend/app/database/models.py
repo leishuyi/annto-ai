@@ -21,12 +21,12 @@ class RiskLevel(str, enum.Enum):
 
 
 class AgentName(str, enum.Enum):
-    A_INTAKE = "agent_a_intake"
-    B_DOC_PARSER = "agent_b_doc_parser"
-    C_LIABILITY = "agent_c_liability"
-    D_CALCULATION = "agent_d_calculation"
-    E_RISK = "agent_e_risk"
-    F_SUMMARY = "agent_f_summary"
+    ORDER_QUERY = "agent_order_query"
+    DOC_INTAKE = "agent_doc_intake"
+    FINANCE_RECON = "agent_finance_recon"
+    DISPATCH_CHECK = "agent_dispatch_check"
+    RISK_DETECTION = "agent_risk_detection"
+    SUMMARY = "agent_summary"
 
 
 class AgentStatus(str, enum.Enum):

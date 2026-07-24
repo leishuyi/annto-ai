@@ -26,7 +26,8 @@ router = APIRouter()
 # 文件魔数签名
 MAGIC_SIGNATURES = {".jpg": b"\xff\xd8\xff", ".jpeg": b"\xff\xd8\xff", ".png": b"\x89PNG", ".bmp": b"BM", ".tiff": b"II*\x00", ".pdf": b"%PDF"}
 
-ALLOWED_EXTENSIONS = {ext.strip().lower() for ext in settings.allowed_extensions.split(",")}
+_ext_list = settings.allowed_extensions if isinstance(settings.allowed_extensions, list) else settings.allowed_extensions.split(",")
+ALLOWED_EXTENSIONS = {("." + ext.strip().lower()) if not ext.startswith(".") else ext.strip().lower() for ext in _ext_list}
 DOC_TYPE_MAP = {
     "id_card": DocumentType.ID_CARD,
     "diagnosis": DocumentType.DIAGNOSIS,
@@ -47,8 +48,9 @@ def _validate_file(file: UploadFile):
     ext = os.path.splitext(file.filename or "")[1].lower() if file.filename else ""
     if ext not in ALLOWED_EXTENSIONS:
         raise BizError(code=ErrCode.VALIDATION, message=f"不支持的文件类型: {ext}，允许: {settings.allowed_extensions}")
-    if file.size is not None and file.size > settings.max_file_size:
-        raise BizError(code=ErrCode.VALIDATION, message=f"文件大小超过限制 ({settings.max_file_size // 1024 // 1024}MB)")
+    max_size = getattr(settings, 'max_upload_size', 10 * 1024 * 1024)
+    if file.size is not None and file.size > max_size:
+        raise BizError(code=ErrCode.VALIDATION, message=f"文件大小超过限制 ({max_size // 1024 // 1024}MB)")
 
 
 def _verify_magic_bytes(content: bytes, ext: str):

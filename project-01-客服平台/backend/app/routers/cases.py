@@ -6,7 +6,7 @@ from loguru import logger
 from sqlalchemy.orm import Session
 
 from app.database.session import get_db
-from app.database.models import Case, CaseStatus, RiskLevel, AuditLog, AuditLog
+from app.database.models import Case, CaseStatus, RiskLevel, AuditLog
 from app.schemas.case import CaseCreate, CaseResponse
 from app.core.response import BizError, ErrCode
 
