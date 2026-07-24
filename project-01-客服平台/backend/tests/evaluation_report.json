@@ -1,0 +1,76 @@
+{
+  "total_samples": 76,
+  "correct": 64,
+  "accuracy": 0.8421,
+  "precision": {
+    "claim": 0.6786,
+    "complaint": 1.0,
+    "consult": 0.8333,
+    "progress": 0.9333,
+    "upload": 1.0
+  },
+  "recall": {
+    "claim": 0.95,
+    "complaint": 0.8,
+    "consult": 0.6667,
+    "progress": 0.875,
+    "upload": 0.8667
+  },
+  "f1": {
+    "claim": 0.7917,
+    "complaint": 0.8889,
+    "consult": 0.7407,
+    "progress": 0.9032,
+    "upload": 0.9286
+  },
+  "macro_f1": 0.8506,
+  "labels": [
+    "claim",
+    "complaint",
+    "consult",
+    "progress",
+    "upload"
+  ],
+  "confusion_matrix": [
+    [
+      19,
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      2,
+      8,
+      0,
+      0,
+      0
+    ],
+    [
+      4,
+      0,
+      10,
+      1,
+      0
+    ],
+    [
+      1,
+      0,
+      1,
+      14,
+      0
+    ],
+    [
+      2,
+      0,
+      0,
+      0,
+      13
+    ]
+  ],
+  "confidence_analysis": {
+    "avg_confidence_correct": 0.8861,
+    "avg_confidence_wrong": 0.6567,
+    "confidence_gap": 0.2294
+  }
+}

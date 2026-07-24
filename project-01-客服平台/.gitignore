@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.db
+.env
+venv/
+.venv/
+node_modules/
+dist/
+.DS_Store
+.claude/
+data/logs/
+
+# Generated test artifacts
+tests/*.json

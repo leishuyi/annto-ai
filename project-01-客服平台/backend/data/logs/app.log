@@ -1,0 +1,85 @@
+2026-07-24 14:16:29.158 | INFO     | app.core.log:setup_logging:37 - 日志初始化完成
+2026-07-24 14:16:29.159 | INFO     | app.main:lifespan:27 - 应用启动
+2026-07-24 14:16:29.162 | INFO     | app.main:lifespan:30 - 数据库表初始化完成
+2026-07-24 14:16:29.162 | INFO     | app.main:lifespan:34 - 事件总线已就绪
+2026-07-24 14:16:29.164 | INFO     | app.main:lifespan:39 - 应用关闭
+2026-07-24 14:16:40.571 | INFO     | app.core.log:setup_logging:37 - 日志初始化完成
+2026-07-24 14:16:40.571 | INFO     | app.main:lifespan:27 - 应用启动
+2026-07-24 14:16:40.574 | INFO     | app.main:lifespan:30 - 数据库表初始化完成
+2026-07-24 14:16:40.574 | INFO     | app.main:lifespan:34 - 事件总线已就绪
+2026-07-24 14:16:40.577 | INFO     | app.main:lifespan:39 - 应用关闭
+2026-07-24 14:16:59.920 | INFO     | app.core.log:setup_logging:37 - 日志初始化完成
+2026-07-24 14:16:59.921 | INFO     | app.main:lifespan:27 - 应用启动
+2026-07-24 14:16:59.922 | INFO     | app.main:lifespan:30 - 数据库表初始化完成
+2026-07-24 14:16:59.923 | INFO     | app.main:lifespan:34 - 事件总线已就绪
+2026-07-24 16:08:36.550 | INFO     | app.core.log:setup_logging:37 - 日志初始化完成
+2026-07-24 16:08:36.551 | INFO     | app.main:lifespan:28 - 应用启动
+2026-07-24 16:08:36.553 | INFO     | app.main:lifespan:31 - 数据库表初始化完成
+2026-07-24 16:08:36.553 | INFO     | app.main:lifespan:35 - 事件总线已就绪
+2026-07-24 19:31:00.764 | INFO     | app.core.log:setup_logging:37 - 日志初始化完成
+2026-07-24 19:31:00.765 | INFO     | app.main:lifespan:29 - 应用启动
+2026-07-24 19:31:00.811 | INFO     | app.main:lifespan:32 - 数据库表初始化完成
+2026-07-24 19:31:00.811 | INFO     | app.main:lifespan:36 - 事件总线已就绪
+2026-07-24 19:32:07.801 | INFO     | app.routers.cases:create_case:43 - 新建报案
+2026-07-24 19:32:13.959 | INFO     | app.agents.orchestrator:run_chain:55 - 开始执行 Agent 链路
+2026-07-24 19:32:13.977 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:32:13.990 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:32:14.005 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:32:14.021 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:32:14.037 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:32:14.050 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:32:14.058 | INFO     | app.agents.orchestrator:run_chain:102 - Agent 链路执行完成
+2026-07-24 19:32:14.060 | INFO     | app.routers.agents:run_agents:29 - Agent 链路执行完毕
+2026-07-24 19:32:22.284 | INFO     | app.routers.human_gate:submit_review:58 - 人工审核完成
+2026-07-24 19:32:28.444 | INFO     | app.routers.cases:create_case:43 - 新建报案
+2026-07-24 19:32:30.489 | INFO     | app.agents.orchestrator:run_chain:55 - 开始执行 Agent 链路
+2026-07-24 19:32:30.497 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:32:30.513 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:32:30.543 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:32:30.562 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:32:30.576 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:32:30.591 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:32:30.597 | INFO     | app.agents.orchestrator:run_chain:102 - Agent 链路执行完成
+2026-07-24 19:32:30.598 | INFO     | app.routers.agents:run_agents:29 - Agent 链路执行完毕
+2026-07-24 19:32:32.657 | INFO     | app.routers.human_gate:submit_review:58 - 人工审核完成
+2026-07-24 19:34:20.537 | INFO     | app.routers.cases:create_case:43 - 新建报案
+2026-07-24 19:34:22.578 | INFO     | app.agents.orchestrator:run_chain:55 - 开始执行 Agent 链路
+2026-07-24 19:34:22.587 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:34:22.595 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:34:22.604 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:34:22.612 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:34:22.623 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:34:22.631 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:34:22.639 | INFO     | app.agents.orchestrator:run_chain:102 - Agent 链路执行完成
+2026-07-24 19:34:22.640 | INFO     | app.routers.agents:run_agents:29 - Agent 链路执行完毕
+2026-07-24 19:34:51.640 | INFO     | app.core.log:setup_logging:37 - 日志初始化完成
+2026-07-24 19:34:51.641 | INFO     | app.main:lifespan:29 - 应用启动
+2026-07-24 19:34:51.643 | INFO     | app.main:lifespan:32 - 数据库表初始化完成
+2026-07-24 19:34:51.644 | INFO     | app.main:lifespan:36 - 事件总线已就绪
+2026-07-24 19:34:51.645 | INFO     | app.main:lifespan:41 - 应用关闭
+2026-07-24 19:34:58.017 | INFO     | app.routers.cases:create_case:43 - 新建报案
+2026-07-24 19:35:00.061 | INFO     | app.agents.orchestrator:run_chain:55 - 开始执行 Agent 链路
+2026-07-24 19:35:00.071 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:35:00.078 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:35:00.086 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:35:00.093 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:35:00.101 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:35:00.111 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:35:00.118 | INFO     | app.agents.orchestrator:run_chain:102 - Agent 链路执行完成
+2026-07-24 19:35:00.120 | INFO     | app.routers.agents:run_agents:29 - Agent 链路执行完毕
+2026-07-24 19:35:06.247 | INFO     | app.routers.human_gate:submit_review:58 - 人工审核完成
+2026-07-24 19:35:30.179 | INFO     | app.core.log:setup_logging:37 - 日志初始化完成
+2026-07-24 19:35:30.179 | INFO     | app.main:lifespan:29 - 应用启动
+2026-07-24 19:35:30.235 | INFO     | app.main:lifespan:32 - 数据库表初始化完成
+2026-07-24 19:35:30.235 | INFO     | app.main:lifespan:36 - 事件总线已就绪
+2026-07-24 19:35:37.141 | INFO     | app.routers.cases:create_case:43 - 新建报案
+2026-07-24 19:35:39.199 | INFO     | app.agents.orchestrator:run_chain:55 - 开始执行 Agent 链路
+2026-07-24 19:35:39.212 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:35:39.222 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:35:39.231 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:35:39.240 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:35:39.249 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:35:39.257 | INFO     | app.agents.base:complete_trace:49 - Agent 执行完成
+2026-07-24 19:35:39.263 | INFO     | app.agents.orchestrator:run_chain:102 - Agent 链路执行完成
+2026-07-24 19:35:39.264 | INFO     | app.routers.agents:run_agents:30 - Agent 链路执行完毕
+2026-07-24 19:35:47.454 | INFO     | app.routers.human_gate:submit_review:58 - 人工审核完成

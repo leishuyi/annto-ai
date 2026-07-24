@@ -1,0 +1,7 @@
+services:
+  parser:
+    build: ./backend
+    ports:
+      - "8010:8000"
+    volumes:
+      - ./backend:/app

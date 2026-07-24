@@ -1,0 +1,7 @@
+services:
+  assistant:
+    build: ./backend
+    ports:
+      - "8012:8003"
+    volumes:
+      - ./backend:/app

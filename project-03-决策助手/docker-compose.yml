@@ -1,0 +1,7 @@
+services:
+  decision:
+    build: ./backend
+    ports:
+      - "8011:8002"
+    volumes:
+      - ./backend:/app
