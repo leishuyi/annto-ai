@@ -1,16 +1,17 @@
-"""Agent 编排器：按状态机调度 6-Agent 链路。
+"""Agent 编排器 — 支持串行/并行混合调度 + 事件驱动。
 
-参考 grid-qa 的架构模式：
-- DI session（由路由层注入，非自行创建）
-- EventBus 事件发布
-- loguru 结构化日志
+编排策略：
+- 串行: A(订单) → B(单据) → (C(财务) ‖ D(调度)) → E(风控) → F(汇总)
+- 并行段通过 feature_agent_parallel 控制
 """
-from datetime import datetime
+from datetime import datetime, timezone
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Optional
 
 from loguru import logger
 from sqlalchemy.orm import Session
 
+from app.config import settings
 from app.agents.protocol import A2AMessage
 from app.agents.agent_order_query import OrderQueryAgent
 from app.agents.agent_doc_intake import DocIntakeAgent
@@ -23,13 +24,22 @@ from app.events import event_bus
 
 
 class AgentOrchestrator:
-    """Agent 编排器 — 负责任务链调度、状态管理、事件发布。"""
+    """Agent 编排器 — 串行/并行混合调度 + 事件驱动。"""
 
-    AGENT_CHAIN = [
+    # 串行段（基础依赖）
+    SERIAL_HEAD = [
         ("agent_order_query", "订单查询"),
         ("agent_doc_intake", "单据录入"),
+    ]
+
+    # 并行段（互不依赖）
+    PARALLEL_GROUP = [
         ("agent_finance_recon", "财务对账"),
         ("agent_dispatch_check", "调度校验"),
+    ]
+
+    # 串行段（依赖前面全部结果）
+    SERIAL_TAIL = [
         ("agent_risk_detection", "风控检测"),
         ("agent_summary", "结论汇总"),
     ]
@@ -45,10 +55,10 @@ class AgentOrchestrator:
         }
 
     def run_chain(self, case_id: int, db: Session) -> Optional[str]:
-        """执行完整 Agent 链路，返回错误信息（None 表示成功）。"""
+        """执行 Agent 链路，返回错误信息（None=成功）。"""
         case = db.query(Case).filter(Case.id == case_id).first()
         if not case:
-            return "案件不存在"
+            return "工单不存在"
 
         case.status = CaseStatus.PROCESSING
         db.commit()
@@ -56,58 +66,97 @@ class AgentOrchestrator:
 
         payload: dict = {"case_id": case_id}
 
-        for agent_key, agent_label in self.AGENT_CHAIN:
+        # Phase 1: 串行段 A → B
+        error = self._run_serial(self.SERIAL_HEAD, payload, case_id, db)
+        if error:
+            return self._fail(case, db, error)
+
+        # Phase 2: 并行段 C ‖ D
+        if settings.feature_agent_parallel:
+            error = self._run_parallel(self.PARALLEL_GROUP, payload, case_id, db)
+        else:
+            error = self._run_serial(self.PARALLEL_GROUP, payload, case_id, db)
+        if error:
+            return self._fail(case, db, error)
+
+        # Phase 3: 串行段 E → F
+        error = self._run_serial(self.SERIAL_TAIL, payload, case_id, db)
+        if error:
+            return self._fail(case, db, error)
+
+        # 完成
+        return self._finish(case, payload, db)
+
+    def _run_serial(self, chain: list, payload: dict, case_id: int, db: Session) -> Optional[str]:
+        """串行执行 Agent 列表。"""
+        for agent_key, agent_label in chain:
             agent = self.agents[agent_key]
             msg = A2AMessage(
-                message_id=f"msg_{case_id}_{agent_key}_{datetime.now().timestamp()}",
-                source_agent=agent_key,
-                target_agent="",
-                case_id=case_id,
-                message_type="request",
-                payload=payload,
+                message_id=f"msg_{case_id}_{agent_key}",
+                source_agent=agent_key, target_agent="",
+                case_id=case_id, message_type="request", payload=payload,
             )
-
             try:
                 result = agent.process(msg, db)
-                payload = result.payload
-
-                # 事件总线：Agent 完成
+                payload.update(result.payload)
                 event_bus.publish("agent.completed", {
-                    "case_id": case_id,
-                    "agent": agent_key,
-                    "label": agent_label,
-                    "confidence": result.confidence if result else None,
+                    "case_id": case_id, "agent": agent_key,
+                    "label": agent_label, "confidence": result.confidence,
                 })
             except Exception as e:
-                error_msg = f"{agent_label} 执行失败: {str(e)}"
-                logger.error(error_msg, case_id=case_id, agent=agent_key)
-                case.status = CaseStatus.DRAFT
-                db.commit()
-                return error_msg
+                return f"{agent_label} 执行失败: {str(e)}"
+        return None
 
-        # 全链路完成 → 待人工审核
+    def _run_parallel(self, group: list, payload: dict, case_id: int, db: Session) -> Optional[str]:
+        """并行执行一组 Agent。"""
+        logger.info("并行执行 Agent", agents=[a for a, _ in group])
+        with ThreadPoolExecutor(max_workers=len(group)) as executor:
+            future_map = {}
+            for agent_key, agent_label in group:
+                agent = self.agents[agent_key]
+                msg = A2AMessage(
+                    message_id=f"msg_{case_id}_{agent_key}_parallel",
+                    source_agent=agent_key, target_agent="",
+                    case_id=case_id, message_type="request", payload=dict(payload),
+                )
+                future = executor.submit(agent.process, msg, db)
+                future_map[future] = (agent_key, agent_label)
+
+            for future in as_completed(future_map):
+                agent_key, agent_label = future_map[future]
+                try:
+                    result = future.result()
+                    payload.update(result.payload)
+                    event_bus.publish("agent.completed", {
+                        "case_id": case_id, "agent": agent_key,
+                        "label": agent_label, "confidence": result.confidence,
+                    })
+                except Exception as e:
+                    return f"{agent_label} 并行执行失败: {str(e)}"
+        return None
+
+    def _fail(self, case: Case, db: Session, error: str) -> str:
+        case.status = CaseStatus.DRAFT
+        db.commit()
+        logger.error("Agent 链路失败", case_id=case.id, error=error)
+        return error
+
+    def _finish(self, case: Case, payload: dict, db: Session) -> None:
         case.status = CaseStatus.PENDING_REVIEW
         case.calculated_amount = payload.get("calculated_amount")
         case.risk_level = payload.get("risk_level", case.risk_level)
 
-        log = AuditLog(
-            case_id=case_id,
-            action="agents_completed",
-            comment="全链路 Agent 处理完成，等待人工审核",
-            operator="system",
-        )
+        log = AuditLog(case_id=case.id, action="agents_completed",
+                       comment="全链路 Agent 处理完成，等待人工审核", operator="system")
         db.add(log)
         db.commit()
 
-        logger.info("Agent 链路执行完成", case_id=case_id, status=str(case.status.value),
-                   amount=case.calculated_amount, risk=str(case.risk_level.value))
+        logger.info("Agent 链路执行完成", case_id=case.id, status=str(case.status.value),
+                    amount=case.calculated_amount, risk=str(case.risk_level.value))
 
-        # 事件总线：案件待审核
         event_bus.publish("case.pending_review", {
-            "case_id": case_id,
-            "case_no": case.case_no,
+            "case_id": case.id, "case_no": case.case_no,
             "risk_level": case.risk_level.value,
             "calculated_amount": case.calculated_amount,
         })
-
         return None
