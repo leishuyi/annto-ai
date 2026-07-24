@@ -4,13 +4,15 @@ from fastapi.responses import JSONResponse
 from loguru import logger
 from app.config import settings
 from app.core.response import ApiResponse
+from app.core.auth import AuthMiddleware
 from app.reasoning.agentic_reasoning import ReasoningChain
 from app.reasoning.nl2sql import NL2SQL
 from app.reasoning.simulation import Simulation
 from app.schemas.decision import Question
 
 app = FastAPI(title=settings.app_name, version="1.0.0")
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True,
+app.add_middleware(AuthMiddleware)
+app.add_middleware(CORSMiddleware, allow_origins=["*"],
                    allow_methods=["*"], allow_headers=["*"])
 
 reasoning = ReasoningChain()
