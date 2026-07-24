@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     feature_human_gate: bool = True
     feature_risk_control: bool = True
     feature_audit_log: bool = True
-    feature_agent_parallel: bool = False
+    feature_agent_parallel: bool = False  # 默认关闭并行：当前 Agent 间存在隐式数据依赖（如 B 的输出被 C 和 D 共用），启用前需验证无竞态
     feature_event_bus: bool = True
     feature_rbac: bool = True
 
