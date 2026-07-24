@@ -11,7 +11,9 @@ class LLMClient:
             if not self.mock_mode:
                 from app.config import settings
                 if settings.llm_api_key:
-                    # TODO: 接入真实 DeepSeek API
+            # TODO: 接入真实 DeepSeek API
+            # 当前 mock 占位：在 settings.llm_api_key 配置完成前，所有 LLM 调用走 fallback
+            # 接入后移除这里的 raise，改为真实的 openai.ChatCompletion.create
                     pass
             raise NotImplementedError("LLM API not connected")
         except Exception as e:
