@@ -43,7 +43,8 @@ async def parse_document(file: UploadFile = File(...), doc_type_hint: str = Form
     try:
         with open(path, "wb") as f:
             f.write(content)
-        result = pipeline.parse(path)
+        industry_hint = doc_type_hint or ""
+        result = pipeline.parse(path, industry_hint=industry_hint)
         return ApiResponse(data=result.model_dump())
     except Exception as e:
         logger.error("解析失败", error=str(e))
