@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Card, Descriptions, Tag, Button, Space, Spin, Divider, Steps, Result } from 'antd'
+import { Card, Descriptions, Tag, Button, Space, Spin, Divider, Steps, Result, message } from 'antd'
 import { ArrowLeftOutlined, CheckCircleOutlined, PlayCircleOutlined, ClockCircleOutlined, RobotOutlined, FileTextOutlined, SafetyCertificateOutlined } from '@ant-design/icons'
 import { api } from '../api/client'
 import AgentTraceView from '../components/AgentTrace'
@@ -127,6 +127,3 @@ export default function TicketDetail() {
     </div>
   )
 }
-
-// message is used in the onClick handler above
-import { message } from 'antd'

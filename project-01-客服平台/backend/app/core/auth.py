@@ -1,7 +1,7 @@
 """认证中间件 — API Key 鉴权
 
-开发环境（feature_rbac=False）跳过鉴权，
-生产环境（feature_rbac=True）校验 X-API-Key 请求头。
+开发环境（feature_rbac=False 或 api_key 为空）跳过鉴权，
+生产环境（feature_rbac=True 且 api_key 非空）校验 X-API-Key 请求头。
 """
 from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
@@ -14,11 +14,11 @@ API_KEY_HEADER = "X-API-Key"
 
 
 class AuthMiddleware(BaseHTTPMiddleware):
-    """简单 API Key 鉴权中间件"""
+    """API Key 鉴权中间件"""
 
     async def dispatch(self, request: Request, call_next):
-        # 开发环境跳过鉴权
-        if not settings.feature_rbac:
+        # 开发环境或未配置 api_key 时跳过鉴权
+        if not settings.feature_rbac or not settings.api_key:
             return await call_next(request)
 
         # 健康检查和 Swagger 文档不鉴权

@@ -10,8 +10,6 @@ class Settings(BaseSettings):
     app_env: str = "development"
     database_url: str = "sqlite:///./annto.db"
     upload_dir: str = str(Path(__file__).parent.parent.parent / "data" / "uploads")
-
-    # ---- Feature Flags ----
     feature_human_gate: bool = True
     feature_risk_control: bool = True
     feature_audit_log: bool = True
@@ -47,6 +45,8 @@ class Settings(BaseSettings):
             raise ValueError("生产环境必须设置 ANNTO_API_KEY")
         if self.is_production() and self.debug:
             raise ValueError("生产环境必须设置 debug=False")
+        # 确保 upload_dir 存在（StaticFiles 在 lifespan 之前执行，必须提前创建）
+        Path(self.upload_dir).mkdir(parents=True, exist_ok=True)
 
 
 @lru_cache
